@@ -6,7 +6,7 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-
+console.log(localStorage.getItem("accessToken"));
 apiClient.interceptors.request.use(
   (config) => {
     // Retrieve the token from storage (localStorage, Vuex, etc.)

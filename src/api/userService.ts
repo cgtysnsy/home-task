@@ -56,6 +56,8 @@ interface UserInformationResponse {
   };
 }
 
+//make dynamic here later
+
 export const fetchUserInformation =
   async (): Promise<UserInformationResponse> => {
     const response = await apiClient.post<UserInformationResponse>(

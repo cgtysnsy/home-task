@@ -59,3 +59,40 @@ export interface UserInformationResponse {
     linkAccountParameters: LinkAccountParameters;
   };
 }
+
+// Define the types for the nested objects first
+export interface DailySalesOverviewItem {
+  date: string;
+  amount: number;
+  orderCount: number;
+  unitCount: number;
+  avgSalesPrev30Days: number;
+  prevYearDate: string;
+  prevYearAmount: number;
+  prevYearOrderCount: number;
+  prevYearUnitCount: number;
+  prevYearAvgSalesPrev30Days: number;
+  profit: number;
+  yoy30DailySalesGrowth: number;
+  acos: number;
+}
+
+export interface DailySalesOverviewParams {
+  marketplace: string;
+  sellerId: string;
+  requestStatus: number;
+  day: number;
+  excludeYoYData: boolean;
+}
+export interface DailySalesOverviewData {
+  Currency: string;
+  item: DailySalesOverviewItem[];
+  isYoyExist: boolean;
+}
+// Now define the DailySalesOverviewResponse using the item type
+export interface DailySalesOverviewResponse {
+  ApiStatus: boolean;
+  ApiStatusCode: string;
+  ApiStatusMessage: string;
+  Data: DailySalesOverviewData;
+}
