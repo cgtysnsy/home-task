@@ -9,8 +9,6 @@ onMounted(async () => {
   try {
     const response = await fetchUserInformation();
     userInformation.value = response;
-
-    console.log(userInformation.value.Data.user, "user information value");
   } catch (error) {
     console.error("Failed to fetch user information:", error);
     // Handle error

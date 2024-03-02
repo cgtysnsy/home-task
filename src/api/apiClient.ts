@@ -6,14 +6,14 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-console.log(localStorage.getItem("accessToken"));
+
 apiClient.interceptors.request.use(
   (config) => {
     // Retrieve the token from storage (localStorage, Vuex, etc.)
     const token = localStorage.getItem("accessToken"); // Adjust based on your token storage
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-    }
+   
     return config;
   },
   (error) => {

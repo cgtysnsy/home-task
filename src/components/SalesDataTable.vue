@@ -13,15 +13,16 @@ import type {
   DailySalesOverviewItem,
   DailySalesOverviewParams,
 } from "@/types";
+import apiClient from "@/api/apiClient";
 // Define a ref to hold the daily sales data
 const dailySalesData = ref<DailySalesOverviewData | null>(null);
 
 // Create an object for the request parameters
 const overviewParams: DailySalesOverviewParams = {
-  marketplace: "Amazon",
-  sellerId: "your-seller-id", // This should be dynamically obtained, perhaps from user information
+  marketplace: "Amazon.com",
+  sellerId: "A3N2GBLFIDRYSH",
   requestStatus: 0,
-  day: 30, // This could be set by the user or some other logic in your application
+  day: 30,
   excludeYoYData: true,
 };
 
@@ -30,10 +31,10 @@ onMounted(async () => {
   try {
     // Fetch the daily sales overview data
     const response = await fetchDailySalesOverview(overviewParams);
+
     if (response.ApiStatus) {
       // If the API call was successful, store the data in your ref
       dailySalesData.value = response.Data;
-      console.log(dailySalesData.value, "is that ok");
     } else {
       // If the API call failed, log the error message
       console.error("API Error:", response.ApiStatusMessage);

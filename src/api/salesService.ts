@@ -16,7 +16,7 @@ export const fetchDailySalesOverview = async (
     "/data/daily-sales-overview",
     params
   );
-  console.log(response, "response in salesservice");
+  console.log(response.data, "daily sales response");
   return response.data;
 };
 

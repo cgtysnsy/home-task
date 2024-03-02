@@ -35,7 +35,7 @@ export default defineComponent({
           credentials.value.Email,
           credentials.value.Password
         );
-        console.log("Logged in with token:", response);
+
         // Redirect or perform other actions upon successful login
       } catch (error) {
         console.error("Login failed:", error);

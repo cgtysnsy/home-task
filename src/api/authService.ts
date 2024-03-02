@@ -56,13 +56,13 @@ const login = async (email: string, password: string): Promise<string> => {
     ClientSecret: "SECRET0001", // Use the provided client secret
     RedirectUri: "https://api.eva.guru", // Use the provided redirect URI
   };
-  console.log(credentials, "credentials");
+
   try {
     const response = await apiClient.post<TokenResponse>(
       "/oauth/token",
       credentials
     );
-    console.log(response, "response");
+
     const { AccessToken } = response.data.Data;
     if (AccessToken) {
       localStorage.setItem("accessToken", AccessToken);
