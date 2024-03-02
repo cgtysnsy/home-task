@@ -29,7 +29,6 @@ export default defineComponent({
     });
 
     const handleLogin = async () => {
-      console.log(credentials.value.Email, credentials.value.Password);
       try {
         // Call the login function with the credentials.value
         const response = await login(

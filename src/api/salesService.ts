@@ -8,6 +8,7 @@ export const fetchDailySalesOverview = async (params: any): Promise<any> => {
       "/data/daily-sales-overview/",
       params
     );
+    console.log(response, "salesservice response");
     return response.data;
   } catch (error) {
     console.error("Error fetching daily sales overview:", error);

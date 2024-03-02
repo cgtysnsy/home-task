@@ -13,7 +13,7 @@ const mutations = {
 };
 
 const actions = {
-  updateAccessToken({ commit }, token: string) {
+  updateAccessToken({ commit }: any, token: string) {
     commit("setAccessToken", token);
   },
 };
