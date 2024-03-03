@@ -62,6 +62,8 @@ export interface UserInformationResponse {
 
 // Define the types for the nested objects first
 export interface DailySalesOverviewItem {
+  fbmAmount: any;
+  fbaAmount: any;
   date: string;
   amount: number;
   orderCount: number;

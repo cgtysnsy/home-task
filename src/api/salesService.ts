@@ -16,16 +16,17 @@ export const fetchDailySalesOverview = async (
     "/data/daily-sales-overview",
     params
   );
-  console.log(response.data, "daily sales response");
+
   return response.data;
 };
 
-export const fetchDailySalesSkuList = async (params: any): Promise<any> => {
+export const fetchSalesSkuList = async (params: any): Promise<any> => {
   try {
     const response = await apiClient.post(
       "/data/daily-sales-sku-list/",
       params
     );
+
     return response.data;
   } catch (error) {
     console.error("Error fetching daily sales SKU list:", error);

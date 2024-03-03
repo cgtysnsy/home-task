@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import SalesDataTable from "@/components/SalesDataTable.vue";
-import UserInformation from "@/components/UserInformation.vue";
+import AuthService from "@/components/AuthService.vue";
 </script>
 
 <template>
   <main>
-    <SalesDataTable />
-    <UserInformation />
+    <AuthService />
   </main>
 </template>

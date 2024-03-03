@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import AuthService from "@/components/AuthService.vue";
+import SalesDataTable from "@/components/SalesDataTable.vue";
+import UserInformation from "@/components/UserInformation.vue";
 </script>
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
-    <AuthService />
+    <SalesDataTable />
+    <UserInformation />
   </div>
 </template>
 
