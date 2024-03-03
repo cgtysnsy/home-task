@@ -34,16 +34,15 @@ import { useSelectionHandling } from "@/composables/useSelectionHandling";
 import { useTableData } from "@/composables/useTableData";
 import { useChartData } from "@/composables/useChartData";
 
-const { clickedColumns, handleColumnClick } = useSelectionHandling();
+const { clickedColumns } = useSelectionHandling();
 const {
   tableData,
-  pageSize,
-  currentPage,
-  fetchTableData,
   pageNumber,
   displayData,
   isLastPage,
   changePage,
   paginatedTableData,
 } = useTableData(clickedColumns);
+
+const { selectedDay } = useChartData();
 </script>

@@ -1,25 +1,31 @@
-import { reactive } from "vue";
+import { useStore } from "vuex";
 
 export function useSelectionHandling() {
-  const clickedColumns = reactive({ salesDate: null, salesDate2: null });
+  const store = useStore();
 
-  const handleColumnClick = async (category: any, callback: Function) => {
-    // Check if this is the first or second column clicked
-    if (!clickedColumns.salesDate) {
-      clickedColumns.salesDate = category;
-      clickedColumns.salesDate2 = null; // Reset the second date
-    } else if (!clickedColumns.salesDate2) {
-      clickedColumns.salesDate2 = category;
-    } else {
-      // Reset if two columns are already selected
-      clickedColumns.salesDate = category;
-      clickedColumns.salesDate2 = null;
+  const handleColumnClick = (category: string, callback?: Function) => {
+    if (!store) {
+      console.error("Vuex store is not available");
+      return;
     }
 
+    let newClickedColumns = {
+      salesDate: category,
+      salesDate2: null,
+    };
+
+    const currentClickedColumns = store.getters["sales/clickedColumns"];
+
+    if (currentClickedColumns.salesDate && !currentClickedColumns.salesDate2) {
+      newClickedColumns.salesDate2 = category;
+    }
+
+    store.dispatch("sales/updateClickedColumns", newClickedColumns);
+
     if (callback) {
-      callback(clickedColumns);
+      callback(newClickedColumns);
     }
   };
 
-  return { clickedColumns, handleColumnClick };
+  return { handleColumnClick };
 }

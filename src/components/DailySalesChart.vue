@@ -11,18 +11,24 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 import { useSelectionHandling } from "@/composables/useSelectionHandling";
 import { useTableData } from "@/composables/useTableData";
 import { useChartData } from "@/composables/useChartData";
 import { Chart } from "highcharts-vue";
 
-const { clickedColumns, handleColumnClick } = useSelectionHandling();
-const { fetchTableData } = useTableData(clickedColumns);
+const store = useStore();
+
+const { handleColumnClick } = useSelectionHandling();
+
+const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
 
 const onClickCallback = (category: any) => {
+  if (!category) return;
   handleColumnClick(category, fetchTableData);
 };
-
+const { fetchTableData } = useTableData(clickedColumns);
 const { chartOptions, selectedDay } = useChartData(onClickCallback);
 
 // Define the chartOptions and selectedDay refs
