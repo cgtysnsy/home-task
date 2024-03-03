@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import SalesDataTable from "@/components/SalesDataTable.vue";
+import DailySalesChart from "@/components/DailySalesChart.vue";
 import UserInformation from "@/components/UserInformation.vue";
+import SalesComparisonTable from "@/components/SalesComparisonTable.vue";
 </script>
 <template>
   <div class="about">
-    <SalesDataTable />
     <UserInformation />
+    <DailySalesChart />
+    <SalesComparisonTable />
   </div>
 </template>
 

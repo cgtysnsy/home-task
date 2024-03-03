@@ -7,32 +7,6 @@
       <option value="7">Last 7 Days</option>
     </select>
     <Chart :options="chartOptions"></Chart>
-    <table v-if="tableData.length">
-      <thead>
-        <tr>
-          <th>SKU</th>
-          <th>Product Name</th>
-          <th>{{ clickedColumns.salesDate }}</th>
-          <th>{{ clickedColumns.salesDate2 }}</th>
-          <th>SKU Refund Rate Last {{ selectedDay }} Days</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in displayData" :key="index">
-          <td>{{ row.sku }}</td>
-          <td>{{ row.productName }}</td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div>
-      <button @click="changePage(-1)" :disabled="pageNumber <= 1">
-        Previous
-      </button>
-      <button @click="changePage(1)" :disabled="isLastPage">Next</button>
-    </div>
   </div>
 </template>
 
@@ -43,21 +17,13 @@ import { useChartData } from "@/composables/useChartData";
 import { Chart } from "highcharts-vue";
 
 const { clickedColumns, handleColumnClick } = useSelectionHandling();
-const {
-  tableData,
-  fetchTableData,
-  changePage,
-  pageNumber,
-  isLastPage,
-  displayData,
-} = useTableData(clickedColumns);
+const { fetchTableData } = useTableData(clickedColumns);
 
-const onClickCallback = (category) => {
+const onClickCallback = (category: any) => {
   handleColumnClick(category, fetchTableData);
 };
 
-const { chartOptions, updateChartOptions, loadChartData, selectedDay } =
-  useChartData(onClickCallback);
+const { chartOptions, selectedDay } = useChartData(onClickCallback);
 
 // Define the chartOptions and selectedDay refs
 // const chartOptions = ref({});
