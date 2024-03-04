@@ -3,13 +3,16 @@ export interface AuthState {
 }
 
 const state: AuthState = {
-  accessToken: null,
+  accessToken: localStorage.getItem("accessToken") || null,
 };
 
 const mutations = {
   setAccessToken(state: AuthState, token: string) {
     state.accessToken = token;
   },
+};
+const getters = {
+  isAuthenticated: (state: AuthState) => !!state.accessToken,
 };
 
 const actions = {
@@ -23,4 +26,5 @@ export const auth = {
   state,
   mutations,
   actions,
+  getters,
 };

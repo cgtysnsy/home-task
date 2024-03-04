@@ -4,7 +4,7 @@ import UserInformation from "@/components/UserInformation.vue";
 import SalesComparisonTable from "@/components/SalesComparisonTable.vue";
 </script>
 <template>
-  <div class="about">
+  <div class="flex flex-col justify-center items-center py-4 px-2">
     <UserInformation />
     <DailySalesChart />
     <SalesComparisonTable />
@@ -13,7 +13,7 @@ import SalesComparisonTable from "@/components/SalesComparisonTable.vue";
 
 <style>
 @media (min-width: 1024px) {
-  .about {
+  .dashboard {
     min-height: 100vh;
     display: flex;
     align-items: center;

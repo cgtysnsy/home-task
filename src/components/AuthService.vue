@@ -1,7 +1,6 @@
 <template>
   <form @submit.prevent="handleLogin">
-    <!-- form fields for username and password -->
-    <input v-model="credentials.Email" type="text" placeholder="Email" />
+    <input v-model="credentials.Email" type="email" placeholder="Email" />
     <input
       v-model="credentials.Password"
       type="password"
@@ -11,39 +10,40 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import { login } from "@/api/authService"; // Adjust the import path as needed
+<script setup lang="ts">
+import { ref } from "vue";
+import { login } from "@/api/authService";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  setup() {
-    // The credentials ref now includes the static values directly
-    const credentials = ref({
-      Email: "",
-      Password: "",
-      GrantType: "password", // Static value for password grant type
-      Scope: "amazon_data", // Scope as per your authentication requirements
-      ClientId: "C0001", // Your client ID
-      ClientSecret: "SECRET0001", // Your client secret
-      RedirectUri: "https://api.eva.guru", // Redirect URI as per your setup
-    });
+const router = useRouter();
 
-    const handleLogin = async () => {
-      try {
-        // Call the login function with the credentials.value
-        const response = await login(
-          credentials.value.Email,
-          credentials.value.Password
-        );
-
-        // Redirect or perform other actions upon successful login
-      } catch (error) {
-        console.error("Login failed:", error);
-        // Handle login failure
-      }
-    };
-
-    return { credentials, handleLogin };
-  },
+const credentials = ref({
+  Email: "",
+  Password: "",
+  GrantType: "password",
+  Scope: "amazon_data",
+  ClientId: "C0001",
+  ClientSecret: "SECRET0001",
+  RedirectUri: "https://api.eva.guru",
 });
+
+const handleLogin = async () => {
+  try {
+    const response = await login(
+      credentials.value.Email,
+      credentials.value.Password
+    );
+    console.log(response, "console");
+    if (response) {
+      console.log("heeee");
+      router.push("/dashboard").catch((err) => {
+        console.error(err);
+      });
+    } else {
+      console.error("No access token received");
+    }
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+};
 </script>
