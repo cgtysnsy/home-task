@@ -11,6 +11,14 @@ const router = createRouter({
       component: AuthService,
     },
     {
+      path: "/user-info",
+      name: "user-info",
+      component: () => import("../components/UserInformation.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/dashboard",
       name: "dashboard",
       component: () => import("../views/Dashboard.vue"),
@@ -24,11 +32,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const isAuthenticated = store.getters["auth/isAuthenticated"];
-  console.log(requiresAuth, isAuthenticated);
+
   if (requiresAuth && !isAuthenticated) {
-    next({ name: "home" });
+    next({ name: "home" }); // Redirect to the login page
   } else {
-    next();
+    next(); // Proceed to the route
   }
 });
 

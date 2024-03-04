@@ -10,6 +10,9 @@ const mutations = {
   setAccessToken(state: AuthState, token: string) {
     state.accessToken = token;
   },
+  clearAccessToken(state: AuthState) {
+    state.accessToken = null;
+  },
 };
 const getters = {
   isAuthenticated: (state: AuthState) => !!state.accessToken,
@@ -18,6 +21,9 @@ const getters = {
 const actions = {
   updateAccessToken({ commit }: any, token: string) {
     commit("setAccessToken", token);
+  },
+  logout({ commit }: any) {
+    commit("clearAccessToken");
   },
 };
 

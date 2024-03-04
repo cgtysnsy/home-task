@@ -11,12 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { login } from "@/api/authService";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
+const store = useStore();
 const router = useRouter();
-
+const isAuthenticated = computed(() => store.getters["auth/isAuthenticated"]);
 const credentials = ref({
   Email: "",
   Password: "",
@@ -33,9 +35,9 @@ const handleLogin = async () => {
       credentials.value.Email,
       credentials.value.Password
     );
-    console.log(response, "console");
+
     if (response) {
-      console.log("heeee");
+      store.dispatch("auth/updateAccessToken", response);
       router.push("/dashboard").catch((err) => {
         console.error(err);
       });
