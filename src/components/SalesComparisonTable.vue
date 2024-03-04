@@ -5,8 +5,15 @@
         <tr>
           <th>SKU</th>
           <th>Product Name</th>
-          <th>{{ clickedColumns.salesDate }}</th>
-          <th>{{ clickedColumns.salesDate2 }}</th>
+          <th v-if="clickedColumns.salesDate">
+            {{ clickedColumns.salesDate }}
+          </th>
+          <th v-if="clickedColumns.salesDate2">
+            {{ clickedColumns.salesDate2 }}
+          </th>
+          <th v-if="clickedColumns.salesDate && clickedColumns.salesDate2">
+            Comparison
+          </th>
           <th>SKU Refund Rate Last {{ selectedDay }} Days</th>
         </tr>
       </thead>
@@ -14,8 +21,11 @@
         <tr v-for="(row, index) in displayData" :key="index">
           <td>{{ row.sku }}</td>
           <td>{{ row.productName }}</td>
-          <td></td>
-          <td></td>
+          <td v-if="clickedColumns.salesDate">{{ row.salesDateData }}</td>
+          <td v-if="clickedColumns.salesDate2">{{ row.salesDate2Data }}</td>
+          <td v-if="clickedColumns.salesDate && clickedColumns.salesDate2">
+            {{ row.comparisonData }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -30,19 +40,17 @@
 </template>
 
 <script setup lang="ts">
-import { useSelectionHandling } from "@/composables/useSelectionHandling";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import { useTableData } from "@/composables/useTableData";
 import { useChartData } from "@/composables/useChartData";
 
-const { clickedColumns } = useSelectionHandling();
-const {
-  tableData,
-  pageNumber,
-  displayData,
-  isLastPage,
-  changePage,
-  paginatedTableData,
-} = useTableData(clickedColumns);
+const store = useStore();
+
+const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
+
+const { tableData, pageNumber, displayData, isLastPage, changePage } =
+  useTableData(clickedColumns.value);
 
 const { selectedDay } = useChartData();
 </script>

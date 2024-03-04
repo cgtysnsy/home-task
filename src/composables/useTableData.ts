@@ -1,44 +1,49 @@
 // src/composables/useTableData.ts
 import { ref, computed, watch } from "vue";
+import { useStore } from "vuex";
 import { fetchSalesSkuList } from "@/api/salesService";
 
-interface ClickedColumns {
-  salesDate?: string | null;
-  salesDate2?: string | null;
-}
-
-export function useTableData(clickedColumns: ClickedColumns) {
+export function useTableData() {
+  const store = useStore();
   const tableData = ref([]);
   const pageSize = ref(30);
   const currentPage = ref(1);
   const pageNumber = ref(1);
+  const tableDataWithDate = ref([]);
 
-  // watch(clickedColumns, (newVal, oldVal) => {
-  //   if (newVal !== oldVal) {
-  //     fetchTableData();
-  //   }
-  // });
+  const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
 
-  const fetchTableData = async (
-    clickedColumns: ClickedColumns,
-    marketplace: string,
-    sellerId: string
-  ) => {
+  watch(
+    clickedColumns,
+    () => {
+      fetchTableData("Amazon.com", "A3N2GBLFIDRYSH"); // Replace with dynamic values if necessary
+    },
+    { deep: true }
+  );
+
+  const fetchTableData = async (marketplace: string, sellerId: string) => {
+    const clickedColumns = store.getters["sales/clickedColumns"];
+
     const isDaysCompare =
       clickedColumns.salesDate && clickedColumns.salesDate2 ? 1 : 0;
 
     const response = await fetchSalesSkuList({
-      marketplace: "Amazon.com",
-      sellerId: "A3N2GBLFIDRYSH",
-      salesDate: clickedColumns.salesDate,
+      marketplace,
+      sellerId,
+      salesDate: clickedColumns.salesDate || "",
       salesDate2: clickedColumns.salesDate2 || "",
       pageSize: pageSize.value,
       pageNumber: currentPage.value,
-      isDaysCompare: isDaysCompare,
+      isDaysCompare,
     });
 
     if (response.ApiStatus) {
       tableData.value = response.Data.item.skuList;
+      // tableData.value = response.Data.item.skuList.map((sku) => ({
+      //   ...sku,
+      //   skuDate: response.Data.item.selectedDate,
+      // }));
+      // console.log(tableDataWithDate.value[0].skuDate, "itemm");
     } else {
       console.error("Error fetching table data:", response.ApiStatusMessage);
     }
@@ -52,9 +57,8 @@ export function useTableData(clickedColumns: ClickedColumns) {
 
   const changePage = (offset: number) => {
     const newPage = pageNumber.value + offset;
-    console.log(newPage, "newPage", Math.ceil(tableData.value.length / 10));
+
     if (newPage > 0 && newPage <= Math.ceil(tableData.value.length / 10)) {
-      console.log(`Changing to page ${newPage}`);
       pageNumber.value = newPage;
     } else {
       console.log(`Page ${newPage} is out of bounds`);
@@ -62,26 +66,45 @@ export function useTableData(clickedColumns: ClickedColumns) {
   };
 
   const isLastPage = computed(() => {
-    console.log(pageNumber.value, "pagenumber value");
-    console.log(
-      Math.ceil(paginatedTableData.value.length / 10),
-      "second value"
-    );
     return pageNumber.value == Math.ceil(paginatedTableData.value.length / 10);
   });
   const displayData = computed(() => {
-    // Assuming currentPage is based on the displayed data, not the fetched data
-    const start = (pageNumber.value - 1) * 10; // 10 items per page for display
+    let dataToShow: any[] = paginatedTableData.value;
+
+    if (clickedColumns.value.salesDate && clickedColumns.value.salesDate2) {
+      // return prepareComparativeDisplayData(dataToShow);
+      // dataToShow = dataToShow.map((item) => ({
+      //   ...item,
+      //   salesData: item[clickedColumns.value.salesDate],
+      //   salesData2: item[clickedColumns.value.salesDate2],
+      // }));
+      // return dataToShow;
+    }
+
+    const start = (pageNumber.value - 1) * 10;
     const end = start + 10;
-    console.log(
-      `Displaying data from index ${start} to ${end} (not inclusive)`
-    );
-    console.log(paginatedTableData.value, "paginated data");
-    return paginatedTableData.value.slice(
-      start,
-      Math.min(end, paginatedTableData.value.length)
-    );
+    return dataToShow.slice(start, Math.min(end, dataToShow.length));
   });
+
+  // const prepareComparativeDisplayData = (dataFromColumn1, dataFromColumn2) => {
+  //   // Assuming dataFromColumn1 and dataFromColumn2 are arrays of objects with the same length and structure
+  //   return dataFromColumn1.map((item, index) => {
+  //     const itemFromColumn2 = dataFromColumn2[index];
+
+  //     // Here you can decide how to compare the two data points
+  //     // For example, you might want to calculate the difference in sales
+  //     const comparativeData = {
+  //       sku: item.sku,
+  //       productName: item.productName,
+  //       salesDate1: item.sales,
+  //       salesDate2: itemFromColumn2.sales,
+  //       difference: item.sales - itemFromColumn2.sales,
+  //       // Add any other comparative metrics or calculations here
+  //     };
+
+  //     return comparativeData;
+  //   });
+  // };
 
   return {
     tableData,

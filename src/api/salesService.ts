@@ -33,5 +33,3 @@ export const fetchSalesSkuList = async (params: any): Promise<any> => {
     throw error; // Or handle it as needed
   }
 };
-
-// Add more functions as needed for different sales-related endpoints
