@@ -1,7 +1,7 @@
 // src/composables/useTableData.ts
 import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
-import { fetchSalesSkuList } from "@/api/salesService";
+import { fetchSalesSkuList, fetchSkuRefund } from "@/api/salesService";
 
 export function useTableData() {
   const store = useStore();
@@ -39,15 +39,58 @@ export function useTableData() {
 
     if (response.ApiStatus) {
       tableData.value = response.Data.item.skuList;
-      // tableData.value = response.Data.item.skuList.map((sku) => ({
-      //   ...sku,
-      //   skuDate: response.Data.item.selectedDate,
-      // }));
-      // console.log(tableDataWithDate.value[0].skuDate, "itemm");
+      //-----Do it Later: mapping all data for sku, should do it for just selected columns ---
+      const skuList = response.Data.item.skuList.map((item) => item.sku);
+      const refundResponse = await fetchSkuRefund({
+        marketplace,
+        sellerId,
+        skuList,
+        requestedDay: 0,
+      });
+
+      if (refundResponse.ApiStatus) {
+        const updatedTableData = tableData.value.map((salesItem) => {
+          const refundItem = refundResponse?.Data.find(
+            (refund) => refund.sku === salesItem?.sku
+          );
+          return {
+            ...salesItem,
+            refundRate: refundItem ? refundItem.refundRate : null,
+            date: clickedColumns.salesDate || "",
+          };
+        });
+
+        tableData.value = updatedTableData;
+      } else {
+        console.error(
+          "Error fetching refund data:",
+          refundResponse.ApiStatusMessage
+        );
+      }
     } else {
       console.error("Error fetching table data:", response.ApiStatusMessage);
     }
   };
+
+  // const fetchRefundData = async () => {
+  //   try {
+  //     const response = await fetchSkuRefund({
+  //       marketplace: "Amazon.com",
+  //       sellerId: "A3N2GBLFIDRYSH",
+  //       skuList: ["string"],
+  //       requestedDay: 0,
+  //     });
+  //     if (response.ApiStatus) {
+  //       // Assuming you want to merge or replace this data
+  //       // Merge or replace logic here...
+  //       console.log("Refund data fetched", response);
+  //     } else {
+  //       console.error("Error fetching refund data:", response.ApiStatusMessage);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching refund data:", error);
+  //   }
+  // };
 
   const paginatedTableData = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value;
@@ -69,42 +112,23 @@ export function useTableData() {
     return pageNumber.value == Math.ceil(paginatedTableData.value.length / 10);
   });
   const displayData = computed(() => {
-    let dataToShow: any[] = paginatedTableData.value;
+    let dataToShow = paginatedTableData.value;
 
-    if (clickedColumns.value.salesDate && clickedColumns.value.salesDate2) {
-      // return prepareComparativeDisplayData(dataToShow);
-      // dataToShow = dataToShow.map((item) => ({
-      //   ...item,
-      //   salesData: item[clickedColumns.value.salesDate],
-      //   salesData2: item[clickedColumns.value.salesDate2],
-      // }));
-      // return dataToShow;
-    }
+    // const { salesDate, salesDate2 } = clickedColumns.value;
+    // if (salesDate && salesDate2 && dataToShow.length > 0) {
+    //   // Filter or transform data based on the selected dates
+    //   // For example, if you want to show only the items related to the selected dates:
+
+    //   const borek = dataToShow.filter((item) => {
+
+    //   });
+
+    // }
 
     const start = (pageNumber.value - 1) * 10;
     const end = start + 10;
     return dataToShow.slice(start, Math.min(end, dataToShow.length));
   });
-
-  // const prepareComparativeDisplayData = (dataFromColumn1, dataFromColumn2) => {
-  //   // Assuming dataFromColumn1 and dataFromColumn2 are arrays of objects with the same length and structure
-  //   return dataFromColumn1.map((item, index) => {
-  //     const itemFromColumn2 = dataFromColumn2[index];
-
-  //     // Here you can decide how to compare the two data points
-  //     // For example, you might want to calculate the difference in sales
-  //     const comparativeData = {
-  //       sku: item.sku,
-  //       productName: item.productName,
-  //       salesDate1: item.sales,
-  //       salesDate2: itemFromColumn2.sales,
-  //       difference: item.sales - itemFromColumn2.sales,
-  //       // Add any other comparative metrics or calculations here
-  //     };
-
-  //     return comparativeData;
-  //   });
-  // };
 
   return {
     tableData,

@@ -31,7 +31,7 @@ export function useChartData(onClickCallback: Function) {
       const response = await fetchDailySalesOverview(params);
       if (response.ApiStatus) {
         dailySalesData.value = response.Data;
-        updateChartOptions(); // Call a function to update the chart
+        updateChartOptions();
       } else {
         console.error("API Error:", response.ApiStatusMessage);
       }

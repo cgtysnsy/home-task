@@ -98,3 +98,20 @@ export interface DailySalesOverviewResponse {
   ApiStatusMessage: string;
   Data: DailySalesOverviewData;
 }
+
+export interface SkuRefundRateParams {
+  marketplace: string;
+  sellerId: string;
+  skuList: string[];
+  requestedDay: number;
+}
+
+export interface SkuRefundResponseItem {
+  item: Array<{ sku: string; refundRate: number }>;
+}
+export interface SkuRefundRateResponse {
+  ApiStatus: boolean;
+  ApiStatusCode: string;
+  ApiStatusMessage: string;
+  Data: SkuRefundResponseItem;
+}

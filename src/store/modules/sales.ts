@@ -31,4 +31,3 @@ export const sales: Module<SalesState, RootState> = {
       state.clickedColumns,
   },
 };
-console.log("state in vue", sales);

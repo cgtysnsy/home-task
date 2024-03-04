@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ displayData[4] }}
     <table v-if="tableData.length">
       <thead>
         <tr>

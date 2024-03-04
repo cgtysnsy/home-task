@@ -9,7 +9,6 @@ export function useSelectionHandling() {
   const store = useStore();
 
   const handleColumnClick = (category: string, callback?: Function) => {
-    console.log("click inside the selection han");
     if (!store) {
       console.error("Vuex store is not available");
       return;

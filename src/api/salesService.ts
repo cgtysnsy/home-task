@@ -5,19 +5,24 @@ import type {
   DailySalesOverviewItem,
   DailySalesOverviewResponse,
   DailySalesOverviewParams,
+  SkuRefundRateParams,
+  SkuRefundRateResponse,
 } from "@/types";
-
-// Use the interfaces defined above...
 
 export const fetchDailySalesOverview = async (
   params: DailySalesOverviewParams
 ): Promise<DailySalesOverviewResponse> => {
-  const response = await apiClient.post<DailySalesOverviewResponse>(
-    "/data/daily-sales-overview",
-    params
-  );
+  try {
+    const response = await apiClient.post<DailySalesOverviewResponse>(
+      "/data/daily-sales-overview",
+      params
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching daily sales overview:", error);
+    throw error;
+  }
 };
 
 export const fetchSalesSkuList = async (params: any): Promise<any> => {
@@ -30,6 +35,17 @@ export const fetchSalesSkuList = async (params: any): Promise<any> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching daily sales SKU list:", error);
-    throw error; // Or handle it as needed
+    throw error;
+  }
+};
+
+export const fetchSkuRefund = async (
+  params: SkuRefundRateParams
+): Promise<SkuRefundRateResponse> => {
+  try {
+    const response = await apiClient.post("/data/get-sku-refund-rate/", params);
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };
