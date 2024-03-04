@@ -1,5 +1,6 @@
 <template>
-  <div class="my-8 px-8 w-full">
+  <ChartLoader v-if="isLoading" />
+  <div v-else class="my-8 px-8 w-full">
     <select v-model="selectedDay" class="float-right chart-title text-sm">
       <option value="60">Last 60 Days</option>
       <option value="30">Last 30 Days</option>
@@ -17,6 +18,7 @@ import { useSelectionHandling } from "@/composables/useSelectionHandling";
 import { useTableData } from "@/composables/useTableData";
 import { useChartData } from "@/composables/useChartData";
 import { Chart } from "highcharts-vue";
+import ChartLoader from "@/components/ChartLoader.vue";
 
 const store = useStore();
 
@@ -29,5 +31,5 @@ const onClickCallback = (category: any) => {
   handleColumnClick(category, fetchTableData);
 };
 const { fetchTableData } = useTableData(clickedColumns);
-const { chartOptions, selectedDay } = useChartData(onClickCallback);
+const { chartOptions, selectedDay, isLoading } = useChartData(onClickCallback);
 </script>

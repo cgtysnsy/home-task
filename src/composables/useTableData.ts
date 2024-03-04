@@ -40,33 +40,33 @@ export function useTableData() {
     if (response.ApiStatus) {
       tableData.value = response.Data.item.skuList;
       //-----Do it Later: mapping all data for sku, should do it for just selected columns ---
-      const skuList = response.Data.item.skuList.map((item) => item.sku);
-      const refundResponse = await fetchSkuRefund({
-        marketplace,
-        sellerId,
-        skuList,
-        requestedDay: 0,
-      });
+      // const skuList = response.Data.item.skuList.map((item) => item.sku);
+      // const refundResponse = await fetchSkuRefund({
+      //   marketplace,
+      //   sellerId,
+      //   skuList,
+      //   requestedDay: 0,
+      // });
 
-      if (refundResponse.ApiStatus) {
-        const updatedTableData = tableData.value.map((salesItem) => {
-          const refundItem = refundResponse?.Data.find(
-            (refund) => refund.sku === salesItem?.sku
-          );
-          return {
-            ...salesItem,
-            refundRate: refundItem ? refundItem.refundRate : null,
-            date: clickedColumns.salesDate || "",
-          };
-        });
+      // if (refundResponse.ApiStatus) {
+      //   const updatedTableData = tableData.value.map((salesItem) => {
+      //     const refundItem = refundResponse?.Data.find(
+      //       (refund) => refund.sku === salesItem?.sku
+      //     );
+      //     return {
+      //       ...salesItem,
+      //       refundRate: refundItem ? refundItem.refundRate : null,
+      //       date: clickedColumns.salesDate || "",
+      //     };
+      //   });
 
-        tableData.value = updatedTableData;
-      } else {
-        console.error(
-          "Error fetching refund data:",
-          refundResponse.ApiStatusMessage
-        );
-      }
+      //   tableData.value = updatedTableData;
+      // } else {
+      //   console.error(
+      //     "Error fetching refund data:",
+      //     refundResponse.ApiStatusMessage
+      //   );
+      // }
     } else {
       console.error("Error fetching table data:", response.ApiStatusMessage);
     }

@@ -26,6 +26,7 @@ export const fetchDailySalesOverview = async (
 };
 
 export const fetchSalesSkuList = async (params: any): Promise<any> => {
+  console.log(params);
   try {
     const response = await apiClient.post(
       "/data/daily-sales-sku-list/",

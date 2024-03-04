@@ -1,11 +1,4 @@
-import {
-  ref,
-  watch,
-  onMounted,
-  defineComponent,
-  reactive,
-  computed,
-} from "vue";
+import { ref, watch, onMounted } from "vue";
 import { fetchDailySalesOverview } from "@/api/salesService";
 
 import type {
@@ -18,7 +11,9 @@ export function useChartData(onClickCallback: Function) {
   const dailySalesData = ref<DailySalesOverviewData | null>(null);
   const chartOptions = ref({});
   const selectedDay = ref<number>(30);
+  const isLoading = ref(false);
   const loadChartData = async (days: number) => {
+    isLoading.value = true;
     const params: DailySalesOverviewParams = {
       marketplace: "Amazon.com",
       sellerId: "A3N2GBLFIDRYSH",
@@ -37,6 +32,8 @@ export function useChartData(onClickCallback: Function) {
       }
     } catch (error) {
       console.error("Error fetching daily sales overview:", error);
+    } finally {
+      isLoading.value = false;
     }
   };
 
@@ -135,5 +132,6 @@ export function useChartData(onClickCallback: Function) {
     loadChartData,
     selectedDay,
     dailySalesData,
+    isLoading,
   };
 }
