@@ -26,7 +26,6 @@ export const fetchDailySalesOverview = async (
 };
 
 export const fetchSalesSkuList = async (params: any): Promise<any> => {
-  console.log(params);
   try {
     const response = await apiClient.post(
       "/data/daily-sales-sku-list/",
@@ -42,7 +41,7 @@ export const fetchSalesSkuList = async (params: any): Promise<any> => {
 
 export const fetchSkuRefund = async (
   params: SkuRefundRateParams
-): Promise<SkuRefundRateResponse> => {
+): Promise<SkuRefundRateResponse[]> => {
   try {
     const response = await apiClient.post("/data/get-sku-refund-rate/", params);
     return response.data;

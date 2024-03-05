@@ -55,10 +55,6 @@ export function useChartData(onClickCallback: Function) {
 
   const updateChartOptions = () => {
     if (dailySalesData.value?.item) {
-      console.log(
-        "🚀 ~ updateChartOptions ~ dailySalesData.value?.item:",
-        JSON.parse(JSON.stringify(dailySalesData.value?.item[0]))
-      );
       chartOptions.value = {
         chart: { type: "column" },
         title: { text: "Daily Sales" },

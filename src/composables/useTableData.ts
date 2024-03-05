@@ -48,57 +48,29 @@ export function useTableData() {
     if (response.ApiStatus) {
       tableData.value = response.Data.item.skuList;
       //-----Do it Later: mapping all data for sku, should do it for just selected columns ---
-      // const skuList = response.Data.item.skuList.map((item) => item.sku);
-      // const refundResponse = await fetchSkuRefund({
-      //   marketplace,
-      //   sellerId,
-      //   skuList,
-      //   requestedDay: 0,
-      // });
+      const skuListArray = response.Data.item.skuList;
+      const refundResponse = await fetchSkuRefund({
+        marketplace,
+        sellerId,
+        skuList: skuListArray,
+        requestedDay: 0,
+      });
 
-      // if (refundResponse.ApiStatus) {
-      //   const updatedTableData = tableData.value.map((salesItem) => {
-      //     const refundItem = refundResponse?.Data.find(
-      //       (refund) => refund.sku === salesItem?.sku
-      //     );
-      //     return {
-      //       ...salesItem,
-      //       refundRate: refundItem ? refundItem.refundRate : null,
-      //       date: clickedColumns.salesDate || "",
-      //     };
-      //   });
-
-      //   tableData.value = updatedTableData;
-      // } else {
-      //   console.error(
-      //     "Error fetching refund data:",
-      //     refundResponse.ApiStatusMessage
-      //   );
-      // }
+      if (response.ApiStatus && refundResponse.ApiStatus) {
+        // Assuming refundResponse.Data is an array with the same length and corresponding order
+        tableData.value = response.Data.item.skuList.map((item, index) => {
+          const refundData = refundResponse.Data[index];
+          // Merge based on some logic; this is just an example
+          return {
+            ...item,
+            refundRate: refundData ? refundData.refundRate : null,
+          };
+        });
+      }
     } else {
       console.error("Error fetching table data:", response.ApiStatusMessage);
     }
   };
-
-  // const fetchRefundData = async () => {
-  //   try {
-  //     const response = await fetchSkuRefund({
-  //       marketplace: "Amazon.com",
-  //       sellerId: "A3N2GBLFIDRYSH",
-  //       skuList: ["string"],
-  //       requestedDay: 0,
-  //     });
-  //     if (response.ApiStatus) {
-  //       // Assuming you want to merge or replace this data
-  //       // Merge or replace logic here...
-  //       console.log("Refund data fetched", response);
-  //     } else {
-  //       console.error("Error fetching refund data:", response.ApiStatusMessage);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching refund data:", error);
-  //   }
-  // };
 
   const paginatedTableData = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value;
@@ -112,7 +84,6 @@ export function useTableData() {
     if (newPage > 0 && newPage <= Math.ceil(tableData.value.length / 10)) {
       pageNumber.value = newPage;
     } else {
-      console.log(`Page ${newPage} is out of bounds`);
     }
   };
 
@@ -122,16 +93,15 @@ export function useTableData() {
   const displayData = computed(() => {
     let dataToShow = paginatedTableData.value;
 
-    // const { salesDate, salesDate2 } = clickedColumns.value;
-    // if (salesDate && salesDate2 && dataToShow.length > 0) {
-    //   // Filter or transform data based on the selected dates
-    //   // For example, if you want to show only the items related to the selected dates:
-
-    //   const borek = dataToShow.filter((item) => {
-
-    //   });
-
-    // }
+    // Assuming clickedColumns.salesDate and clickedColumns.salesDate2 are the identifiers for the selected columns
+    if (clickedColumns.value.salesDate && clickedColumns.value.salesDate2) {
+      // Filter the data based on some logic; this example filters by presence of sales data on selected dates
+      dataToShow = dataToShow.filter((row) => {
+        // Example logic: check if row has data for the selected dates
+        // Adjust according to how your data is structured and what it means to "select" a column
+        return row.salesDateData && row.salesDate2Data;
+      });
+    }
 
     const start = (pageNumber.value - 1) * 10;
     const end = start + 10;

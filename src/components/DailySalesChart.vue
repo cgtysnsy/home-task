@@ -1,7 +1,7 @@
 <template>
   <ChartLoader v-if="isLoading" />
-  <div v-else class="my-8 px-8 w-full">
-    <select v-model="selectedDay" class="float-right text-sm">
+  <div v-else class="my-2 w-full">
+    <select v-model="selectedDay" class="text-xs">
       <option value="60">Last 60 Days</option>
       <option value="30">Last 30 Days</option>
       <option value="14">Last 14 Days</option>

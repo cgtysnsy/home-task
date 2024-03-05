@@ -21,9 +21,11 @@
           <th
             v-if="clickedColumns.salesDate"
             scope="col"
-            class="border-b-2 border-gray-200 px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+            class="border-b-2 border-gray-200 px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider text-center"
           >
-            {{ clickedColumns.salesDate }}
+            <p>{{ clickedColumns.salesDate }}</p>
+            <p>Sales/ Units</p>
+            <p>Avg.Selling Price</p>
           </th>
           <th
             v-if="clickedColumns.salesDate2"
@@ -32,18 +34,13 @@
           >
             {{ clickedColumns.salesDate2 }}
           </th>
-          <th
-            v-if="clickedColumns.salesDate && clickedColumns.salesDate2"
-            scope="col"
-            class="border-b-2 border-gray-200 px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-          >
-            Comparison
-          </th>
+
           <th
             scope="col"
-            class="border-b-2 border-gray-200 px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+            class="border-b-2 border-gray-200 px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            SKU Refund Rate Last {{ selectedDay }} Days
+            <p>SKU Refund Rate</p>
+            <p class="text-[9px]">(Last {{ selectedDay }} Days)</p>
           </th>
         </tr>
       </thead>
@@ -61,21 +58,19 @@
           </td>
           <td
             v-if="clickedColumns.salesDate"
-            class="border-b border-gray-200 px-4 py-3 text-sm"
+            class="border-b border-gray-200 px-4 py-3 text-xs text-green-600 text-center"
           >
-            {{ row.salesDateData }}
-          </td>
-          <td
-            v-if="clickedColumns.salesDate2"
-            class="border-b border-gray-200 px-4 py-3 text-sm"
-          >
-            {{ row.salesDate2Data }}
+            <p>$ {{ row.amount }} / {{ row.qty }}</p>
+            <p>${{ (row.amount / row.qty).toFixed(2) }}</p>
           </td>
           <td
             v-if="clickedColumns.salesDate && clickedColumns.salesDate2"
             class="border-b border-gray-200 px-4 py-3 text-sm"
           >
             {{ row.comparisonData }}
+          </td>
+          <td class="border-b border-gray-200 px-4 py-3 text-sm text-right">
+            {{ row.refundRate }}%
           </td>
         </tr>
       </tbody>
@@ -103,7 +98,6 @@ import { useChartData } from "@/composables/useChartData";
 
 const store = useStore();
 const selectedDay = computed(() => store.state.sales.selectedDay);
-console.log("🚀 ~ selectedDay:", selectedDay);
 
 const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
 

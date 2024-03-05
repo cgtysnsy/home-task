@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <h1>Wellcome {{ userInformation?.Data.user.firstName }}</h1>
+  <div class="w-full flex flex-col justify-center items-center">
+    <h1 class="my-10">
+      Wellcome {{ userInformation?.Data.user.firstName }}
+      {{ userInformation?.Data.user.lastName }}
+    </h1>
     <button @click="logout" class="btn">Logout</button>
   </div>
 </template>

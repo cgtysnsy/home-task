@@ -1,13 +1,31 @@
 <template>
-  <form @submit.prevent="handleLogin">
-    <input v-model="credentials.Email" type="email" placeholder="Email" />
-    <input
-      v-model="credentials.Password"
-      type="password"
-      placeholder="Password"
-    />
-    <button type="submit">Login</button>
-  </form>
+  <div
+    class="w-full flex flex-col justify-start items-center h-screen text-center mt-[98px]"
+  >
+    <h class="chart-title mt-12">Log in with:</h>
+    <h3>Email: homework@eva.guru</h3>
+    <h3>Password: Homeworkeva1**</h3>
+    <form
+      @submit.prevent="handleLogin"
+      class="text-center flex flex-col item-center border py-16 px-12 border-primary mt-6"
+    >
+      <input
+        v-model="credentials.Email"
+        type="email"
+        placeholder="Email"
+        class="border py-4 px-6 my-4"
+      />
+      <input
+        v-model="credentials.Password"
+        type="password"
+        placeholder="Password"
+        class="border py-4 px-6 my-4"
+      />
+      <button type="submit" class="bg-primary text-white py-4 px-6">
+        Login
+      </button>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">

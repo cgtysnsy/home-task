@@ -14,15 +14,22 @@ export function useSelectionHandling() {
       return;
     }
 
-    let newClickedColumns: ClickedColumns = {
-      salesDate: category,
-      salesDate2: null,
-    };
-
     const currentClickedColumns = store.getters["sales/clickedColumns"];
 
-    if (currentClickedColumns.salesDate && !currentClickedColumns.salesDate2) {
+    let newClickedColumns: ClickedColumns = { ...currentClickedColumns };
+
+    if (!currentClickedColumns.salesDate) {
+      newClickedColumns.salesDate = category;
+    } else if (
+      currentClickedColumns.salesDate &&
+      !currentClickedColumns.salesDate2
+    ) {
       newClickedColumns.salesDate2 = category;
+    } else {
+      // Reset or set to new values based on your requirements
+      // This example resets both if both are already set
+      newClickedColumns.salesDate = category;
+      newClickedColumns.salesDate2 = null;
     }
 
     store.dispatch("sales/updateClickedColumns", newClickedColumns);
