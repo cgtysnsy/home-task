@@ -1,16 +1,32 @@
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { fetchDailySalesOverview } from "@/api/salesService";
+import { useStore } from "vuex";
+import type { DailySalesOverviewData, DailySalesOverviewParams } from "@/types";
 
-import type {
-  DailySalesOverviewData,
-  DailySalesOverviewParams,
-  DailySalesOverviewItem,
-} from "@/types";
+interface ChartPoint {
+  y: number;
+  fbaAmount: number;
+  fbmAmount: number;
+  fbaShippingAmount: number;
+}
+
+interface HighchartsPoint {
+  category: string;
+  series: {
+    color: string;
+    name: string;
+  };
+  point: {
+    options: ChartPoint;
+  };
+}
 
 export function useChartData(onClickCallback: Function) {
+  const store = useStore();
+  const selectedDay = computed(() => store.state.sales.selectedDay);
   const dailySalesData = ref<DailySalesOverviewData | null>(null);
   const chartOptions = ref({});
-  const selectedDay = ref<number>(30);
+
   const isLoading = ref(false);
   const loadChartData = async (days: number) => {
     isLoading.value = true;
@@ -39,6 +55,10 @@ export function useChartData(onClickCallback: Function) {
 
   const updateChartOptions = () => {
     if (dailySalesData.value?.item) {
+      console.log(
+        "🚀 ~ updateChartOptions ~ dailySalesData.value?.item:",
+        JSON.parse(JSON.stringify(dailySalesData.value?.item[0]))
+      );
       chartOptions.value = {
         chart: { type: "column" },
         title: { text: "Daily Sales" },
@@ -50,23 +70,15 @@ export function useChartData(onClickCallback: Function) {
           shadow: false,
         },
         tooltip: {
-          formatter: function () {
-            let tooltipHtml: any = `<b>${this.x}</b><br/>`; // The x value is the category (date in this case)
+          formatter: function (this: any) {
+            let tooltipHtml = `<b>${this.x}</b><br/>`;
 
-            // Loop over each series and point
-            this.points.forEach((point: any) => {
-              // Access the additional properties from the point's options
-              const pointOptions = point.point.options;
-              tooltipHtml += `<br/><span style="color:${point.series.color}">\u25CF</span> ${point.series.name}: <b>${point.y}</b>`;
-              tooltipHtml += `<br/>Total Sales: <b>${
-                pointOptions.fbaAmount + pointOptions.fbmAmount
-              }</b>`;
-              tooltipHtml += `<br/>Shipping: <b>${pointOptions.fbaShippingAmount}</b>`;
-              // Add other fields as needed
-            });
-
-            // Since you want to show fbaAmount and fbmAmount even if they are not in the series, you could access them like this:
-            const pointOptions = this.points[0].point.options; // Assuming all points have the same data structure
+            const pointOptions = this.points[0].point.options;
+            tooltipHtml += `<br/>Total Sales: <b>${
+              pointOptions.fbaAmount + pointOptions.fbmAmount
+            }</b>`;
+            tooltipHtml += `<br/>Shipping: <b>${pointOptions.fbaShippingAmount}</b>`;
+            tooltipHtml += `<br/>Profit: <b>${pointOptions.y}</b>`;
             tooltipHtml += `<br/>FBA Sales: <b>${pointOptions.fbaAmount}</b>`;
             tooltipHtml += `<br/>FBM Sales: <b>${pointOptions.fbmAmount}</b>`;
 
@@ -121,7 +133,6 @@ export function useChartData(onClickCallback: Function) {
     loadChartData(newDay);
   });
 
-  // Load the chart data initially
   onMounted(() => {
     loadChartData(selectedDay.value);
   });
@@ -130,7 +141,7 @@ export function useChartData(onClickCallback: Function) {
     chartOptions,
     updateChartOptions,
     loadChartData,
-    selectedDay,
+
     dailySalesData,
     isLoading,
   };

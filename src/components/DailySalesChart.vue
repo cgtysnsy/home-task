@@ -1,7 +1,7 @@
 <template>
   <ChartLoader v-if="isLoading" />
   <div v-else class="my-8 px-8 w-full">
-    <select v-model="selectedDay" class="float-right chart-title text-sm">
+    <select v-model="selectedDay" class="float-right text-sm">
       <option value="60">Last 60 Days</option>
       <option value="30">Last 30 Days</option>
       <option value="14">Last 14 Days</option>
@@ -26,10 +26,15 @@ const { handleColumnClick } = useSelectionHandling();
 
 const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
 
+const selectedDay = computed({
+  get: () => store.state.sales.selectedDay,
+  set: (value) => store.dispatch("sales/updateSelectedDay", value),
+});
+
 const onClickCallback = (category: any) => {
   if (!category) return;
   handleColumnClick(category, fetchTableData);
 };
 const { fetchTableData } = useTableData(clickedColumns);
-const { chartOptions, selectedDay, isLoading } = useChartData(onClickCallback);
+const { chartOptions, isLoading } = useChartData(onClickCallback);
 </script>

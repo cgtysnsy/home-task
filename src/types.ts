@@ -115,3 +115,20 @@ export interface SkuRefundRateResponse {
   ApiStatusMessage: string;
   Data: SkuRefundResponseItem;
 }
+export interface ChartPoint {
+  x: number;
+  fbaAmount: number;
+  fbmAmount: number;
+  fbaShippingAmount: number;
+}
+
+export interface HighchartsPoint {
+  category: string;
+  series: {
+    color: string;
+    name: string;
+  };
+  point: {
+    options: ChartPoint;
+  };
+}

@@ -81,7 +81,10 @@
       </tbody>
     </table>
 
-    <div class="flex justify-center items-center p-4 bg-white">
+    <div
+      v-if="tableData.length > 0"
+      class="flex justify-center items-center p-4 bg-white"
+    >
       <button @click="changePage(-1)" :disabled="pageNumber <= 1" class="btn">
         Previous
       </button>
@@ -99,11 +102,11 @@ import { useTableData } from "@/composables/useTableData";
 import { useChartData } from "@/composables/useChartData";
 
 const store = useStore();
+const selectedDay = computed(() => store.state.sales.selectedDay);
+console.log("🚀 ~ selectedDay:", selectedDay);
 
 const clickedColumns = computed(() => store.getters["sales/clickedColumns"]);
 
 const { tableData, pageNumber, displayData, isLastPage, changePage } =
   useTableData(clickedColumns.value);
-
-const { selectedDay } = useChartData();
 </script>

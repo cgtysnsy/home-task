@@ -3,6 +3,14 @@ import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { fetchSalesSkuList, fetchSkuRefund } from "@/api/salesService";
 
+interface TableRowData {
+  sku: string;
+  productName: string;
+  salesDateData?: string;
+  salesDate2Data?: string;
+  comparisonData?: string;
+}
+
 export function useTableData() {
   const store = useStore();
   const tableData = ref([]);
