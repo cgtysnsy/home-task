@@ -29,3 +29,5 @@ npm install
 ```
 npm start
 ```
+
+Live link: https://eva-test-case.netlify.app/
